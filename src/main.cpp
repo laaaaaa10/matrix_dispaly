@@ -58,8 +58,7 @@ void handleFile(String path, String type) {
 void setup() {
   Serial.begin(115200);
 
-  Serial2.begin(9600, SERIAL_8N1, DISP_RX, DISP_TX, true);
-
+  Serial2.begin(9600, SERIAL_8N1, -1, 22, true);
   // SPIFFS
   if (!SPIFFS.begin(true)) {
     Serial.println("SPIFFS mount failed");
@@ -87,7 +86,11 @@ void setup() {
   server.on("/send", HTTP_GET, []() {
     if (server.hasArg("text")) {
       String text = server.arg("text");
-      sendToDisplay(text);
+      Serial.println("Got: " + text);  // check serial monitor
+      Serial2.write(0x02);
+      Serial2.print("01");
+      Serial2.print(text);
+      Serial2.write(0x03);
     }
     server.send(200, "text/plain", "OK");
   });
@@ -95,6 +98,7 @@ void setup() {
   server.begin();
   Serial.println("Server started");
 }
+
 
 // -------------------- LOOP --------------------
 void loop() {
