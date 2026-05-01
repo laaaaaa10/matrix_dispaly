@@ -4,13 +4,21 @@
 #include <SPIFFS.h>
 #include "display.h"
 
-#define DISP_TX 17
-#define DISP_RX 16
-
 const char* ssid = "ESP_Display";
 const char* password = "12345678";
 
 WebServer server(80);
+String currentText = "";
+
+// -------------------- SCROLL TASK --------------------
+void scrollTask(void* param) {
+  while (true) {
+    if (currentText.length() > 0) {
+      scrollText(currentText, 1, 1); // 1 loop at a time, task repeats forever
+    }
+    delay(10);
+  }
+}
 
 // -------------------- FILE SERVER --------------------
 void handleFile(String path, String type) {
@@ -18,7 +26,6 @@ void handleFile(String path, String type) {
     server.send(404, "text/plain", "Missing file: " + path);
     return;
   }
-
   File file = SPIFFS.open(path, "r");
   server.streamFile(file, type);
   file.close();
@@ -38,6 +45,8 @@ void setup() {
   WiFi.softAP(ssid, password);
   Serial.println("WiFi started");
 
+  xTaskCreatePinnedToCore(scrollTask, "scroll", 4096, NULL, 1, NULL, 0); // runs on core 0
+
   // -------------------- ROUTES --------------------
   server.on("/", HTTP_GET, []() {
     handleFile("/index.html", "text/html");
@@ -53,9 +62,8 @@ void setup() {
 
   server.on("/send", HTTP_GET, []() {
     if (server.hasArg("text")) {
-      String text = server.arg("text");
-      Serial.println("Got: " + text);
-      scrollText(text, 1, 3);
+      currentText = server.arg("text");
+      Serial.println("Got: " + currentText);
     }
     server.send(200, "text/plain", "OK");
   });
