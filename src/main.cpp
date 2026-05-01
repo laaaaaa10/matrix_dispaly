@@ -1,3 +1,26 @@
+/*#include <Arduino.h>
+
+void setup() {
+  // Serial2: RX=-1 (unused), TX=22, invert=true
+  Serial2.begin(9600, SERIAL_8N1, -1, 22, true);
+  delay(5000);
+
+  Serial2.write(0x02);        // STX
+  Serial2.print("01");        // address
+  Serial2.write(0x01);        // SOH
+  Serial2.print("T");         // command = write text
+  Serial2.print("A");         // file label
+  Serial2.write(0x1B);        // ESC
+  Serial2.print("SCL");       // scroll
+  Serial2.print("HELLO WORLD THIS IS A TEST");
+  Serial2.write(0x04);        // EOT
+  Serial2.write(0x03);        // ETX
+}
+
+void loop() {}*/
+
+
+
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
@@ -14,6 +37,7 @@ WebServer server(80);
 // -------------------- DISPLAY --------------------
 void sendToDisplay(String text) {
   Serial2.write(0x02);
+  Serial2.print("01");
   Serial2.print(text);
   Serial2.write(0x03);
 }
@@ -34,7 +58,7 @@ void handleFile(String path, String type) {
 void setup() {
   Serial.begin(115200);
 
-  Serial2.begin(9600, SERIAL_8N1, DISP_RX, DISP_TX);
+  Serial2.begin(9600, SERIAL_8N1, DISP_RX, DISP_TX, true);
 
   // SPIFFS
   if (!SPIFFS.begin(true)) {
