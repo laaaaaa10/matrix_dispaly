@@ -1,23 +1,41 @@
-/*#include <Arduino.h>
+#include <Arduino.h>
 
-void setup() {
-  // Serial2: RX=-1 (unused), TX=22, invert=true
-  Serial2.begin(9600, SERIAL_8N1, -1, 22, true);
-  delay(5000);
+void send(String label, String payload) {
+  // show label first
+  Serial2.write(0x02);
+  Serial2.print("01");
+  Serial2.print(label);
+  Serial2.write(0x03);
+  delay(3000);
 
-  Serial2.write(0x02);        // STX
-  Serial2.print("01");        // address
-  Serial2.write(0x01);        // SOH
-  Serial2.print("T");         // command = write text
-  Serial2.print("A");         // file label
-  Serial2.write(0x1B);        // ESC
-  Serial2.print("SCL");       // scroll
-  Serial2.print("HELLO WORLD THIS IS A TEST");
-  Serial2.write(0x04);        // EOT
-  Serial2.write(0x03);        // ETX
+  // send test
+  Serial2.write(0x02);
+  Serial2.print("01");
+  Serial2.print(payload);
+  Serial2.write(0x03);
+  delay(4000);
 }
 
-void loop() {}*/
+void setup() {
+  Serial2.begin(9600, SERIAL_8N1, -1, 22, true);
+  delay(5000);
+}
+
+void loop() {
+  // try different effect codes before text
+  send("T01", "\x1BSCL" "HELLO WORLD");
+  send("T02", "\x1BSCR" "HELLO WORLD");
+  send("T03", "\x1BROT" "HELLO WORLD");
+  send("T04", "\x1BSCL0" "HELLO WORLD");
+  send("T05", "\x01" "A\x1BSCL" "HELLO WORLD");
+  send("T06", "\x01" "A" "HELLO WORLD");  // no effect, just MCS
+  send("T07", "\x02" "A\x1BSCL" "HELLO WORLD");
+  send("T08", "A\x1BSCL" "HELLO WORLD");
+  send("T09", "\x1BSCLU" "HELLO WORLD");
+  send("T10", "\x06" "HELLO WORLD");  // ACK prefix
+}
+
+/*
 
 
 
@@ -103,4 +121,4 @@ void setup() {
 // -------------------- LOOP --------------------
 void loop() {
   server.handleClient();
-}
+}*/
