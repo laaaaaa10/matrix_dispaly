@@ -1,15 +1,160 @@
+/* Page background and text styling */
 body {
-  font-family: Arial;
+  font-family: Arial, sans-serif;
+  background: #f0f4f8;
+  color: #1e293b;
+  margin: 0;
+  padding: 0;
+}
+
+/* Center the content and limit width on large screens */
+.page {
+  max-width: 520px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* Main page title */
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
   text-align: center;
-  margin-top: 50px;
 }
 
-input {
-  padding: 10px;
-  width: 200px;
+/* Card boxes around sections */
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  padding: 18px 20px;
+  margin-bottom: 18px;
 }
 
-button {
-  padding: 10px;
-  margin-left: 5px;
+/* Headings inside cards */
+h2 {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+/* Text input and textarea styling */
+input[type="text"], textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Make the message box taller and resizable */
+textarea {
+  min-height: 120px;
+  resize: none;
+  overflow: hidden;
+}
+
+/* Slider row above the buttons */
+.slider-row {
+  margin-top: 12px;
+}
+
+/* Button row below the slider */
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.center-label {
+  text-align: center;
+  color: rgba(71, 85, 105, 0.14);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+/* Direction button style */
+.direction-button {
+  background: #ffffff;
+  color: #111827;
+  border: 2px solid #111827;
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 1.05rem;
+  cursor: pointer;
+  min-width: 70px;
+}
+
+.direction-button:hover {
+  background: #f8fafc;
+}
+
+/* Send button style */
+.send-button {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 22px;
+  font-size: 1rem;
+  cursor: pointer;
+  min-width: 120px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.send-button:hover {
+  background: #1d4ed8;
+}
+
+.button-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+}
+
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .page {
+    max-width: 100%;
+    padding: 10px;
+  }
+}
+
+/* Speed control area */
+.speed-box {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Label above the slider */
+.speed-box label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+
+/* Make the slider compact */
+input[type="range"] {
+  width: 100%;
+  margin: 0;
+  height: 22px;
+}
+
+/* Small helper text */
+p {
+  margin: 8px 0 0;
+  line-height: 1.5;
+}
+
+/* Small note text */
+.small {
+  color: #64748b;
+  font-size: 0.9rem;
 }

@@ -1,7 +1,7 @@
 #include "display.h"
 
 #define DISP_TX 22
-#define SCROLL_DELAY 150
+int ScrollSpeed = 150;
 
 void sendFrame(String frame) {
   while (frame.length() < 6) frame += " ";
@@ -21,7 +21,7 @@ void scrollText(String msg, int direction, int loops) {
     for (int i = 0; i <= totalFrames; i++) {
       int pos = (direction == 1) ? i : (totalFrames - i);
       sendFrame(padded.substring(pos, pos + 6));
-      delay(SCROLL_DELAY);
+      delay(ScrollSpeed);
     }
   }
 }

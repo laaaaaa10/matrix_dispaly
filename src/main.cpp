@@ -4,17 +4,27 @@
 #include <SPIFFS.h>
 #include "display.h"
 
-const char* ssid = "ESP_Display";
-const char* password = "12345678";
+const char* ssid = "ESP_Displayy";
+const char* password = "123456789";
 
 WebServer server(80);
 String currentText = "";
+int currentDirection = 1;
+bool RestrictedWord = false;
+
+// Simple function to block specific words
+bool wordContains(const String &text) {
+  //String lower = text;
+  //lower.toLowerCase();
+  //return lower.indexOf("") >= 0;
+  return false; // No restrictions for now
+}
 
 // -------------------- SCROLL TASK --------------------
 void scrollTask(void* param) {
   while (true) {
     if (currentText.length() > 0) {
-      scrollText(currentText, 1, 1); // 1 loop at a time, task repeats forever
+      scrollText(currentText, currentDirection, 1); // 1 loop at a time, task repeats forever
     }
     delay(10);
   }
@@ -60,10 +70,41 @@ void setup() {
     handleFile("/style.css", "text/css");
   });
 
+  server.on("/send.png", HTTP_GET, []() {
+    handleFile("/send.png", "image/png");
+  });
+
   server.on("/send", HTTP_GET, []() {
     if (server.hasArg("text")) {
       currentText = server.arg("text");
       Serial.println("Got: " + currentText);
+      RestrictedWord = wordContains(currentText);
+      if (RestrictedWord) {
+        Serial.println("Restricted word detected");
+      }
+    }
+    if (server.hasArg("speed")) {
+      int sliderVal = server.arg("speed").toInt();
+      ScrollSpeed = 200 - (150 * sliderVal) / 100;
+      if (ScrollSpeed < 50) ScrollSpeed = 50; // clamp to min 50
+      Serial.println("Speed set to: " + String(ScrollSpeed));
+    }
+    if (server.hasArg("direction")) {
+      currentDirection = server.arg("direction").toInt();
+      if (currentDirection != 1 && currentDirection != -1) {
+        currentDirection = 1;
+      }
+      Serial.println("Direction set to: " + String(currentDirection));
+    }
+    server.send(200, "text/plain", "OK");
+  });
+
+  server.on("/speed", HTTP_GET, []() {
+    if (server.hasArg("speed")) {
+      int sliderVal = server.arg("speed").toInt();
+      ScrollSpeed = 200 - (150 * sliderVal) / 100;
+      if (ScrollSpeed < 50) ScrollSpeed = 50; // clamp to min 50
+      Serial.println("Speed set to: " + String(ScrollSpeed));
     }
     server.send(200, "text/plain", "OK");
   });
