@@ -3,6 +3,7 @@
 // ----- includes ----- //
 #include "display.h"
 #include "time_manager.h"
+#include "fun_features.h"
 
 // ----- variables ----- //
 int ScrollSpeed = 150;

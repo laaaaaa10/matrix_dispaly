@@ -7,6 +7,7 @@
 #include <SPIFFS.h>
 #include "display.h"
 #include "time_manager.h"
+#include "fun_features.h"
 
 
 // ----- variables ----- //
@@ -147,6 +148,7 @@ void setup() {
     server.send(200, "text/plain", showClock ? "1" : "0");
   });
 
+  randomSeed(analogRead(0));
   server.begin();
 }
 

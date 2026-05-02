@@ -1,5 +1,18 @@
 // Keep track of the current scroll direction: 1 is forward, -1 is backward.
 let currentDirection = 1;
+let labelTimer = null;
+
+// Sets the center label and resets it to "made by Javier" after 3 seconds.
+function setLabel(html, color) {
+  const centerLabel = document.querySelector(".center-label");
+  centerLabel.innerHTML = html;
+  centerLabel.style.color = color;
+  clearTimeout(labelTimer);
+  labelTimer = setTimeout(() => {
+    centerLabel.innerHTML = "made by Javier";
+    centerLabel.style.color = "";
+  }, 3000);
+}
 
 // This function runs when the user clicks the send button.
 function sendText() {
@@ -9,7 +22,7 @@ function sendText() {
 
   // If there is no text, tell the user to type something first.
   if (!text) {
-    alert("Please type a message before sending.");
+    setLabel("Please type a message.", "#ef4444");
     return;
   }
 
@@ -19,24 +32,8 @@ function sendText() {
       "&speed=" + encodeURIComponent(speed) +
       "&direction=" + encodeURIComponent(currentDirection)
   )
-    .then(() => {
-      const centerLabel = document.querySelector(".center-label");
-      centerLabel.innerHTML = "Message sent<br>successfully!";
-      centerLabel.style.color = "#10b981";
-      setTimeout(() => {
-        centerLabel.innerHTML = "made by Javier";
-        centerLabel.style.color = "";
-      }, 3000);
-    })
-    .catch(() => {
-      const centerLabel = document.querySelector(".center-label");
-      centerLabel.innerHTML = "Failed to send<br>message.";
-      centerLabel.style.color = "#ef4444";
-      setTimeout(() => {
-        centerLabel.innerHTML = "made by Javier";
-        centerLabel.style.color = "";
-      }, 3000);
-    });
+    .then(() => setLabel("Message sent<br>successfully!", "#10b981"))
+    .catch(() => setLabel("Failed to send<br>message.", "#ef4444"));
 }
 
 // Toggle the scroll direction when the user clicks the direction button.
