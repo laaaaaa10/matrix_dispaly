@@ -26,7 +26,7 @@ function sendText() {
       setTimeout(() => {
         centerLabel.innerHTML = "made by Javier";
         centerLabel.style.color = "";
-      }, 3000);
+      }, 3000); // Reset after 3 seconds
     })
     .catch(() => {
       const centerLabel = document.querySelector(".center-label");
@@ -41,9 +41,9 @@ function sendText() {
 
 // Toggle the scroll direction when the user clicks the direction button.
 function toggleDirection() {
+  const button = document.getElementById("directionButton");
   currentDirection = currentDirection === 1 ? -1 : 1;
-  document.getElementById("directionButton").textContent =
-    currentDirection === 1 ? "direction: →" : "direction: ←";
+  button.textContent = currentDirection === 1 ? "direction: →" : "direction: ←";
 }
 
 // Adjust the textarea height to fit its content.
@@ -52,22 +52,18 @@ function resizeTextarea(textarea) {
   textarea.style.height = textarea.scrollHeight + "px";
 }
 
-// Asks the ESP for its current time and updates the paragraph in the info card.
-function updateEspTime() {
-  fetch("/time")
-    .then(r => r.text())
-    .then(t  => { document.getElementById("estTime").textContent = "EST time: " + t; })
-    .catch(()  => { document.getElementById("estTime").textContent = "EST time: unavailable"; });
-}
-
 // Wire up the page after it loads.
 document.addEventListener("DOMContentLoaded", () => {
   const speedInput = document.getElementById("speed");
   const speedValue = document.getElementById("speedValue");
   const textArea = document.getElementById("text");
+  const directionButton = document.getElementById("directionButton");
 
   // Show the current slider value when the page first opens.
   speedValue.textContent = speedInput.value;
+
+  // Set the initial direction button label.
+  directionButton.textContent = "direction: →";
 
   // Update the percent text as the user moves the slider.
   speedInput.addEventListener("input", () => {
@@ -77,16 +73,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // Auto-grow the textarea as the user types.
   textArea.addEventListener("input", () => resizeTextarea(textArea));
   resizeTextarea(textArea);
-
-  // Send the browser's current time to the ESP, then start polling once
-  // the sync has actually been received. This prevents /time from being
-  // called before the ESP knows what time it is.
-  fetch("/sync?ts=" + Math.floor(Date.now() / 1000))
-    .then(() => {
-      updateEspTime();
-      setInterval(updateEspTime, 1000);
-    })
-    .catch(() => {
-      document.getElementById("estTime").textContent = "EST time: unavailable";
-    });
 });
