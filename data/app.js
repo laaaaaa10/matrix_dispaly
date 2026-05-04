@@ -1,5 +1,5 @@
 // Keep track of the current scroll direction: 1 is forward, -1 is backward.
-let currentDirection = 1;
+let currentDirection = -1;
 let labelTimer = null;
 
 // Sets the center label and resets it to "made by Javier" after 3 seconds.
