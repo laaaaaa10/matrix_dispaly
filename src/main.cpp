@@ -11,8 +11,8 @@
 
 
 // ----- variables ----- //
-const char* ssid     = "ESP_Displayy";
-const char* password = "123456789";
+const char* ssid     = "ESP_Display";
+const char* password = "12345678";
 
 WebServer server(80);
 String currentText = "";

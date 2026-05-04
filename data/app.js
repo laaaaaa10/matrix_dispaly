@@ -30,7 +30,7 @@ function sendText() {
   fetch(
     "/send?text=" + encodeURIComponent(text) +
       "&speed=" + encodeURIComponent(speed) +
-      "&direction=" + encodeURIComponent(currentDirection)
+      "&direction=" + encodeURIComponent(-currentDirection)
   )
     .then(() => setLabel("Message sent<br>successfully!", "#10b981"))
     .catch(() => setLabel("Failed to send<br>message.", "#ef4444"));
@@ -38,7 +38,7 @@ function sendText() {
 
 // Toggle the scroll direction when the user clicks the direction button.
 function toggleDirection() {
-  currentDirection = currentDirection === 1 ? -1 : 1;
+  currentDirection = currentDirection === -1 ? 1 : -1;
   document.getElementById("directionButton").textContent =
     currentDirection === 1 ? "direction: →" : "direction: ←";
 }
