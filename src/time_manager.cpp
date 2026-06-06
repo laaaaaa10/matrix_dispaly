@@ -54,7 +54,7 @@ bool inActiveTime() {
     weekday = day % 7;
 
     // if its the weekday, check if its in the sleep window
-    if (weekday != 2 && weekday != 3) { // 2 = Saturday, 3 = Sunday
+    if ((weekday != 2 && weekday != 3) || !WeekendSLP) { // 2 = Saturday, 3 = Sunday
         // Handles both normal and overnight sleep windows
         hour = getCurrentHour();
         if (hour >= START_HOUR && hour <= END_HOUR) { 
