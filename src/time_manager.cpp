@@ -53,13 +53,16 @@ bool inActiveTime() {
     day = localNow() / 86400;
     weekday = day % 7;
 
-    // if its the weekday, check if its in the sleep window
+    // Apply the configured weekday and weekend schedule.
     if ((weekday != 2 && weekday != 3) || !WeekendSLP) { // 2 = Saturday, 3 = Sunday
-        // Handles both normal and overnight sleep windows
         hour = getCurrentHour();
-        if (hour >= START_HOUR && hour <= END_HOUR) { 
-            return true;
-        }
+        if (hour < START_HOUR || hour >= END_HOUR) return false;
+
+        // Unix day 0 was Thursday: Thursday = 0, Friday = 1.
+        if (weekday == 0 && hour >= THURSDAY_SLEEP_START && hour < THURSDAY_SLEEP_END) return false;
+        if (weekday == 1 && hour >= FRIDAY_SLEEP_START && hour < FRIDAY_SLEEP_END) return false;
+
+        return true;
     }
     return false;
 }

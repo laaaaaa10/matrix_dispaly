@@ -68,7 +68,7 @@ Scrolling via serial command was never cracked. Every known MCS protocol scroll 
 
 ## Active Hours
 
-The display blanks itself automatically outside of active hours so it's not lighting up a room at 3 AM or during class.
+The display blanks itself automatically outside of active hours and during the configured class breaks.
 
 Configured in `time_manager.h`:
 ```cpp
@@ -76,6 +76,8 @@ const int UTC_OFFSET  = -4;   // EST
 const int START_HOUR  =  8;   // on at 8 AM
 const int END_HOUR    = 18;   // off at 6 PM
 ```
+
+It is also off on Thursday from 12 PM to 6 PM and on Friday from 8 AM to 2 PM.
 
 Weekday vs weekend is derived directly from the Unix timestamp — no RTC needed. Time is synced from the browser on page load and tracked internally after that.
 
