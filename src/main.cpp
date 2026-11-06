@@ -129,6 +129,10 @@ void setup() {
     if (server.hasArg("stack")) {
       stackMode = server.arg("stack").toInt() == 1;
     }
+    // time mode on/off
+    if (server.hasArg("time")) {
+      showClock = server.arg("time").toInt() == 1;
+    }
     server.send(200, "text/plain", "OK");
   });
 
