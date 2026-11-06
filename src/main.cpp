@@ -19,6 +19,7 @@ String currentText = "";
 
 int currentDirection = 1;
 bool showClock = false;
+bool stackMode = false;
 bool RestrictedWord = false;
 
 int sliderVal = 0; // global variable to store slider value for speed control
@@ -55,12 +56,20 @@ void scrollTask(void* param) {
       continue;
     }
     if (showClock && isTimeSynced()) {
+      if (stackMode) {
+        stackClock(currentDirection);
+        continue;
+      }
       sendFrame(" " + getCurrentTimeString().substring(0, 5)); // show "HH:MM"
       delay(500);
       continue;
     }
     if (currentText.length() > 0) {
-      scrollText(currentText, currentDirection, 1);
+      if (stackMode) {
+        stackText(currentText, currentDirection);
+      } else {
+        scrollText(currentText, currentDirection, 1);
+      }
     }
     delay(10);
   }
@@ -115,6 +124,10 @@ void setup() {
     if (server.hasArg("direction")) {
       currentDirection = server.arg("direction").toInt();
       if (currentDirection != 1 && currentDirection != -1) currentDirection = 1;
+    }
+    // stack mode on/off
+    if (server.hasArg("stack")) {
+      stackMode = server.arg("stack").toInt() == 1;
     }
     server.send(200, "text/plain", "OK");
   });

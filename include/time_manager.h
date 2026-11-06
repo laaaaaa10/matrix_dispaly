@@ -6,8 +6,8 @@ const int START_HOUR =  8;  // starts displaying (start of college)
 const int END_HOUR   = 18;  // stops displaying at 6 PM
 const int THURSDAY_SLEEP_START = 12;
 const int THURSDAY_SLEEP_END   = 18;
-const int FRIDAY_SLEEP_START   = 8;
-const int FRIDAY_SLEEP_END     = 14;
+const int FRIDAY_SLEEP_START   = 0;
+const int FRIDAY_SLEEP_END     = 0;
 static bool WeekendSLP;          // if true, sleep on weekends too
 
 void   syncTime(unsigned long epoch);

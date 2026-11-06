@@ -45,3 +45,70 @@ String basicLLM(String prompt) {
     }
     return "";
 }
+
+
+// ----- stack mode ----- //
+extern bool showClock;
+extern bool stackMode;
+extern int currentDirection;
+
+// letters enter one at a time, stack up, hold 2 s, then slide off.
+// written for text moving left, direction -1 mirrors the text and every frame.
+
+static String mirror(String s) {
+    String out = "";
+    for (int i = s.length() - 1; i >= 0; i--) out += s[i];
+    return out;
+}
+
+// one frame + one speed step, false when out of active hours
+static bool stackStep(String frame, int direction) {
+    if (!inActiveTime()) {
+        sendFrame("      ");
+        return false;
+    }
+    sendFrame(direction == 1 ? frame : mirror(frame));
+    delay(ScrollSpeed);
+    return true;
+}
+
+static bool stackIn(String s, int direction) {
+    for (int k = 0; k < (int)s.length(); k++) {
+        for (int col = 5; col >= k; col--) {
+            String frame = "      ";
+            for (int c = 0; c < k; c++) frame.setCharAt(c, s[c]);
+            frame.setCharAt(col, s[k]);
+            if (!stackStep(frame, direction)) return false;
+        }
+    }
+    return true;
+}
+
+static bool stackOut(String s, int direction) {
+    for (int shift = 1; shift <= (int)s.length(); shift++) {
+        String frame = "      ";
+        for (int c = 0; c + shift < (int)s.length(); c++) frame.setCharAt(c, s[c + shift]);
+        if (!stackStep(frame, direction)) return false;
+    }
+    return true;
+}
+
+// typed text, max 6 letters
+void stackText(String text, int direction) {
+    text = text.substring(0, 6);
+    if (direction != 1) text = mirror(text);
+    if (!stackIn(text, direction)) return;
+    delay(2000);
+    stackOut(text, direction);
+}
+
+// "HH:MM" stays until the minute changes, then slides off
+void stackClock(int direction) {
+    String t = getCurrentTimeString().substring(0, 5);
+    String s = (direction == 1) ? t : mirror(t);
+    if (!stackIn(s, direction)) return;
+    while (getCurrentTimeString().substring(0, 5) == t && showClock && stackMode && currentDirection == direction && inActiveTime()) {
+        delay(50);
+    }
+    stackOut(s, direction);
+}

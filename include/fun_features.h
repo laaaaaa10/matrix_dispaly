@@ -28,3 +28,6 @@ const String names[] = {
 };
 
 const int nameCount = sizeof(names) / sizeof(names[0]);
+
+void stackText(String text, int direction);
+void stackClock(int direction);
